@@ -7,12 +7,19 @@ from kubernetes import client, config
 from openshift.dynamic import DynamicClient
 
 
+with open('/run/secrets/kubernetes.io/serviceaccount/token') as fd:
+    token = fd.read()
+
 with open('/run/secrets/kubernetes.io/serviceaccount/namespace') as fd:
     namespace = fd.read()
 
 app = flask.Flask(__name__)
 config.load_incluster_config()
 api = DynamicClient(client.ApiClient())
+
+sess = requests.Session()
+sess.headers['Authorization'] = f'bearer {token}'
+sess.verify = '/run/secrets/kubernetes.io/serviceaccount/ca.crt'
 
 
 @app.route('/')
@@ -38,13 +45,6 @@ def v1():
 
 @app.route('/v2')
 def v2():
-    with open('/run/secrets/kubernetes.io/serviceaccount/token') as fd:
-        token = fd.read()
-
-    sess = requests.Session()
-    sess.headers['Authorization'] = f'bearer {token}'
-    sess.verify = '/run/secrets/kubernetes.io/serviceaccount/ca.crt'
-
     url = os.environ['KUBERNETES_PORT'].replace('tcp://', 'https://')
     res = sess.get(f'{url}/api/v1/namespaces/{namespace}/pods')
 
@@ -53,4 +53,3 @@ def v2():
         200,
         {'Content-type': 'application/json'}
     ))
-
