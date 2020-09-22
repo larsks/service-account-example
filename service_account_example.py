@@ -29,6 +29,7 @@ def index():
     <li><a href="/v1">version 1 (using openshift module)</a></li>
     <li><a href="/v2">version 2 (doing it the hard way)</a></li>
     </ul>
+    <p>See the code for these examples <a href="https://github.com/larsks/service-account-example">here</a>.</p>
     '''
 
 
