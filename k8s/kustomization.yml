@@ -1,0 +1,8 @@
+---
+commonLabels:
+  app: service-account-example
+namespace: service-account-example
+resources:
+  - serviceaccount.yml
+  - rolebinding.yml
+  - deployment.yml
