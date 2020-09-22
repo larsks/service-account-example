@@ -36,3 +36,7 @@ The above steps will create:
 - A `Deployment` resource
 - A `Service`
 - A `Route`
+
+## See also
+
+- https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/
