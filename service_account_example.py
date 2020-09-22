@@ -46,7 +46,7 @@ def v1():
 
 @app.route('/v2')
 def v2():
-    url = os.environ['KUBERNETES_PORT'].replace('tcp://', 'https://')
+    url = 'https://kubernetes.default.svc'
     res = sess.get(f'{url}/api/v1/namespaces/{namespace}/pods')
 
     return app.make_response((
