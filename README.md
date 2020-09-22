@@ -18,8 +18,9 @@ certificate, and the Kubernetes API url from data in the environment:
 - The token and ca certificate are provided by the secret and are located
   in `/run/secrets/kubernetes.io/serviceaccount`,
 
-- The Kubernetes API URL comes from the `KUBERNETES_PORT` environment
-  variable.
+- We use the magic name `kubernetes.default.svc` to access the Kubernetes API,
+  which will map to a cluster local ip address at which we can access the API
+  via https.
 
 ## Deploying
 
