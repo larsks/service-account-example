@@ -34,6 +34,13 @@ def index():
 
 
 def filter_managed_fields(data):
+    '''Remove managedFields structure from pod metadata.
+
+    OCP4 returns a managedFields structure as part of API responses that is
+    mostly just clutter when inspecting resources. This removes the structure
+    from our results.
+    '''
+
     for item in data['items']:
         del item['metadata']['managedFields']
 
