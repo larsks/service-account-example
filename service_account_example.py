@@ -1,7 +1,6 @@
 import flask
-import json
-import os
 import requests
+import yaml
 
 from kubernetes import client, config
 from openshift.dynamic import DynamicClient
@@ -33,14 +32,23 @@ def index():
     '''
 
 
+def filter_managed_fields(data):
+    for item in data['items']:
+        del item['metadata']['managedFields']
+
+
 @app.route('/v1')
 def v1():
     podapi = api.resources.get(api_version='v1', kind='Pod')
     pods = podapi.get(namespace=namespace)
+    data = pods.to_dict()
+
+    filter_managed_fields(data)
+
     return app.make_response((
-        json.dumps(pods.to_dict(), indent=2),
+        yaml.safe_dump(data, default_flow_style=False),
         200,
-        {'Content-type': 'application/json'}
+        {'Content-type': 'text/plain'}
     ))
 
 
@@ -48,9 +56,12 @@ def v1():
 def v2():
     url = 'https://kubernetes.default.svc'
     res = sess.get(f'{url}/api/v1/namespaces/{namespace}/pods')
+    data = res.json()
+
+    filter_managed_fields(data)
 
     return app.make_response((
-        json.dumps(res.json(), indent=2),
+        yaml.safe_dump(data, default_flow_style=False),
         200,
-        {'Content-type': 'application/json'}
+        {'Content-type': 'text/plain'}
     ))

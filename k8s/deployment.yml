@@ -13,7 +13,7 @@ spec:
       serviceAccountName: service-account-example
       containers:
         - name: service-account-example
-          image: larsks/service-account-example:20200922-05
+          image: larsks/service-account-example:20200922-08
           ports:
             - containerPort: 8080
 ---
