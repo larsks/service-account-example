@@ -5,11 +5,12 @@ import yaml
 from kubernetes import client, config
 from openshift.dynamic import DynamicClient
 
+serviceaccount = '/run/secrets/kubernetes.io/serviceaccount'
 
-with open('/run/secrets/kubernetes.io/serviceaccount/token') as fd:
+with open(f'{serviceaccount}/token') as fd:
     token = fd.read()
 
-with open('/run/secrets/kubernetes.io/serviceaccount/namespace') as fd:
+with open(f'{serviceaccount}/namespace') as fd:
     namespace = fd.read()
 
 app = flask.Flask(__name__)
@@ -18,7 +19,7 @@ api = DynamicClient(client.ApiClient())
 
 sess = requests.Session()
 sess.headers['Authorization'] = f'bearer {token}'
-sess.verify = '/run/secrets/kubernetes.io/serviceaccount/ca.crt'
+sess.verify = f'{serviceaccount}/ca.crt'
 
 
 @app.route('/')
